@@ -5,7 +5,7 @@ from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
     middlename = models.CharField(max_length=50)
-    group = models.CharField(max_length=30, blank=True)
+    group = models.CharField(max_length=30,blank=True, null=True)
     role = (
         ('Студент','Студент'), ('Преподаватель','Преподаватель')
     )

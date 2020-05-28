@@ -1,6 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.contrib.auth import authenticate, logout
+from django.contrib.auth import login as djanjologin
 from . forms import *
 from . models import *
 from django.contrib.auth.models import Group
@@ -20,5 +22,23 @@ def register(request):
             new_user.groups.add(Group.objects.get(name='Преподаватели'))
         else:
             new_user.groups.add(Group.objects.get(name='Студенты'))
-        return redirect('register')
+        return redirect('login')
     return render(request, 'mainApp/register.html',{'formreg':formreg})
+
+def login(request):
+    #if request.user.is_authenticated:
+        #return redirect('main')
+    #else:
+        if request.method == 'POST':
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            user = authenticate(request, username=username, password = password)
+            if user is not None:
+                djanjologin(request, user)
+                return redirect('main')
+            else:
+                messages.info(request, 'Логин или пароль введен неверно')
+        return render(request, 'mainApp/login.html')
+    
+def mainPage(request):
+    return render(request,"mainApp/mainPage.html")

@@ -15,8 +15,8 @@
         }
     </style>
 </head>
-<body>
-    <div class="row">
+<body class="jumbotron jumbotron-fluid">
+    <div class="row ">
         <div class="col-4" ></div>
         <div class="col-4" >
             <form method="POST">
@@ -28,36 +28,60 @@
                             {{ field.errors }}               
                             <div class="form-control"> 
                                 {% if field == formreg.role %}
-                                {{ field.label_tag }}
+                                <label>Зарегистрироваться как:</label>
                                 <select name="role" id="id_role" onChange="Selected(this)">
                                     <option value="Студент" selected="">Студент</option>   
                                     <option value="Преподаватель">Преподаватель</option>                              
                                   </select>
                                 {% else %}
-                                    {{ field.label_tag }}{{ field }}
+                                    {% if field == formreg.middlename %}
+                                        <label>Отчество:</label>
+                                        {{ field }}                                 
+                                    {% else %}
+                                        {% if field == formreg.group %}
+                                            <label>Группа:</label>
+                                            {{field}}
+                                        {% else %}
+                                            {{ field.label_tag }}{{ field }}
+                                        {% endif %}
+                                    {% endif%}
                                 {% endif %}
                             </div>                       
                         </div>
                     {% endfor %}   
                 </div>  
-                <center><button class ="btn btn-primary" type="submit">Зарегистрироваться</button></center>    
+                <div class="mt-4">
+                    <div class="d-flex justify-content-center mt-3 login_container">
+                        <input class="btn btn-secondary btn-sm" type="submit" value="Зарегистрироваться">
+                      </div>
+					<div class="d-flex justify-content-center links">
+						<p>Уже есть аккаунт?</p> <a href="{% url 'login' %}" class="ml-2">Войти</a>
+					</div>
+				</div>    
             </form>  
         </div>
         <div class="col-4" ></div>
     </div>
     <script>
         var form_fields = document.getElementsByTagName('input')
-        form_fields[1].required=true;
-        form_fields[2].required=true;
-        form_fields[3].required=true;
-        form_fields[4].required=true;
+        form_fields[1].required= true;
+        form_fields[2].required= true;
+        form_fields[3].required= true;
+        form_fields[4].required= true;
         form_fields[5].required= true;
-        form_fields[6].required=true;
+        form_fields[6].required= true;
+        form_fields[7].required= true;
         function Selected(a) {
             var label = a.value;
             if (label == 'Студент') {
                 var form_fields2 = document.getElementsByTagName('input')
-                form_fields2[7].required=true;
+                form_fields2[1].required= true;
+                form_fields2[2].required= true;
+                form_fields2[3].required= true;
+                form_fields2[4].required= true;
+                form_fields2[5].required= true;
+                form_fields2[6].required= true;
+                form_fields2[7].required= true;
                 var fields1 = document.getElementsByClassName('form-group')
                 fields1[6].style.display = 'block'
                 var fields2 = document.getElementsByClassName('form-group')
@@ -65,7 +89,13 @@
             }
             else if (label=='Преподаватель') {
                 var form_fields3 = document.getElementsByTagName('input')
-                form_fields3[7].required=false;
+                form_fields3[1].required= true;
+                form_fields3[2].required= true;
+                form_fields3[3].required= true;
+                form_fields3[4].required= true;
+                form_fields3[5].required= true;
+                form_fields3[6].required= true;
+                form_fields3[7].required= false;
                 var fields3 = document.getElementsByClassName('form-group')
                 fields3[6].style.display = 'None'
                 var fields4 = document.getElementsByClassName('form-group')

@@ -3,9 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <title>Авторизация</title>
+    <style type="text/css">
+        .form-group {
+            clear:both; 
+            text-align:right;
+        }
+        label {
+            float:left;
+        }
+    </style>
 </head>
-<body>
-    
+<body class="jumbotron jumbotron-fluid">
+    <div class="container ">
+    <div class="row ">
+        <div class="col-4" ></div>
+        <div class="col-4 " >
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-control"> 
+                    <h3>Авторизация</h3>
+                        <div class="form-group">                
+                            <div class="form-control"> 
+                                <label>Логин</label>
+                                <input name="username">
+                            </div>                       
+                        </div>
+                        <div class="form-group">                
+                            <div class="form-control"> 
+                                <label>Пароль</label>
+                                <input name="password" type="password">
+                            </div>                       
+                        </div>
+                </div>  
+                <div class="mt-4">
+                    <div class="d-flex justify-content-center mt-3 login_container">
+                        <input class="btn btn-secondary btn-sm" type="submit" value="Войти">
+                    </div>
+                    <div class="d-flex justify-content-center links">
+						<p class="test">Нет аккаунта?</p>
+						<br>
+						<a href="{% url 'registration' %}" class="ml-2">Регистрация</a>
+					</div>
+				</div>    
+            </form>  
+        </div>
+        <div class="col-4" ></div>
+    </div>
+</div>
 </body>
 </html>
