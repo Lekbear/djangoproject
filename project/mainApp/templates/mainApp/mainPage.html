@@ -3,9 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Посещаемость</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Основная страница</title>
+    <style>
+        #users{
+            margin-right: 15px;
+        }
+    </style>
 </head>
 <body>
-    Мы зарегались
+    <nav class="navbar navbar-expand-lg fixed-top navbar-light" style="background: #E1E1E1;" >
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" href="#">Что бы написать?</a>
+            </div>
+        </div>
+        <form class="form-inline my-2 my-lg-0">
+            <label id = "users" >{{request.user.role}}</label>
+            <label id = "users" >{{request.user}}</label>
+            <button class="btn btn-sm align-middle btn-outline-secondary" type="button"><a href="{% url 'logout' %}">Выйти</a></button>
+        </form>
+        
+      </nav>
 </body>
 </html>
