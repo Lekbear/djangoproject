@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Document</title>
+    <style type="text/css">
+        div.col-4 {
+
+            border: 1px solid; /* Рамка вокруг таблицы */
+            margin: auto; /* Выравниваем таблицу по центру окна  */
+        }
+    </style>
+</head>
+<body>
+    <div class="col-4">
+        <h1>Регистрация</h1>
+        <form method="POST">
+            {% csrf_token %}
+            <table>
+                {% for field in formreg %}
+                    <tr>  
+                        {{ field.errors }}
+                        <th> {{ field.label_tag }}</th>  <td>{{ field }}</td>
+                    </tr>
+                {% endfor %} 
+            </table>         
+            <center><button class ="btn btn-primary" type="submit">Зарегистрироваться</button></center>    
+        </form>  
+    </div>
+                                       
+</body>
+</html>
