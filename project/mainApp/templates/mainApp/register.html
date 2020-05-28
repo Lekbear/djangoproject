@@ -6,29 +6,72 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <title>Document</title>
     <style type="text/css">
-        div.col-4 {
-
-            border: 1px solid; /* Рамка вокруг таблицы */
-            margin: auto; /* Выравниваем таблицу по центру окна  */
+        .form-group {
+            clear:both; 
+            text-align:right;
+        }
+        label {
+            float:left;
         }
     </style>
 </head>
 <body>
-    <div class="col-4">
-        <h1>Регистрация</h1>
-        <form method="POST">
-            {% csrf_token %}
-            <table>
-                {% for field in formreg %}
-                    <tr>  
-                        {{ field.errors }}
-                        <th> {{ field.label_tag }}</th>  <td>{{ field }}</td>
-                    </tr>
-                {% endfor %} 
-            </table>         
-            <center><button class ="btn btn-primary" type="submit">Зарегистрироваться</button></center>    
-        </form>  
+    <div class="row">
+        <div class="col-4" ></div>
+        <div class="col-4" >
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-control"> 
+                    <h3>Регистрация</h3>
+                    {% for field in formreg %}
+                        <div class="form-group">  
+                            {{ field.errors }}               
+                            <div class="form-control"> 
+                                {% if field == formreg.role %}
+                                {{ field.label_tag }}
+                                <select name="role" id="id_role" onChange="Selected(this)">
+                                    <option value="Студент" selected="">Студент</option>   
+                                    <option value="Преподаватель">Преподаватель</option>                              
+                                  </select>
+                                {% else %}
+                                    {{ field.label_tag }}{{ field }}
+                                {% endif %}
+                            </div>                       
+                        </div>
+                    {% endfor %}   
+                </div>  
+                <center><button class ="btn btn-primary" type="submit">Зарегистрироваться</button></center>    
+            </form>  
+        </div>
+        <div class="col-4" ></div>
     </div>
-                                       
+    <script>
+        var form_fields = document.getElementsByTagName('input')
+        form_fields[1].required=true;
+        form_fields[2].required=true;
+        form_fields[3].required=true;
+        form_fields[4].required=true;
+        form_fields[5].required= true;
+        form_fields[6].required=true;
+        function Selected(a) {
+            var label = a.value;
+            if (label == 'Студент') {
+                var form_fields2 = document.getElementsByTagName('input')
+                form_fields2[7].required=true;
+                var fields1 = document.getElementsByClassName('form-group')
+                fields1[6].style.display = 'block'
+                var fields2 = document.getElementsByClassName('form-group')
+                fields2[6].style.display = 'block'
+            }
+            else if (label=='Преподаватель') {
+                var form_fields3 = document.getElementsByTagName('input')
+                form_fields3[7].required=false;
+                var fields3 = document.getElementsByClassName('form-group')
+                fields3[6].style.display = 'None'
+                var fields4 = document.getElementsByClassName('form-group')
+                fields4[6].style.display = 'None'
+            }
+        }
+    </script>
 </body>
 </html>
