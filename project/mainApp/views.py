@@ -23,6 +23,7 @@ def register(request):
             new_user.group = formreg.cleaned_data['group']
             new_user.role = formreg.cleaned_data['role']
             new_user.save()
+            new_user.groups.add(Group.objects.get(name = formreg.cleaned_data['group']))
             if formreg.cleaned_data['role'] == 'Преподаватель':
                 new_user.groups.add(Group.objects.get(name='Преподаватели'))
             else:
@@ -52,3 +53,14 @@ def logoutUser(request):
 @login_required(login_url='login')
 def mainPage(request):
     return render(request,"mainApp/mainPage.html")
+
+@login_required(login_url='login')
+def list_group(request):
+    groups_list = Group.objects.all()
+    p = -1
+    return render(request,"mainApp/group.html",{'groups_list':groups_list})
+
+@login_required(login_url='login')
+def detail_group(request,table):
+    group = Group.objects.get(id = table)
+    return render(request, "mainApp/detail_group.html", {'group':group})
