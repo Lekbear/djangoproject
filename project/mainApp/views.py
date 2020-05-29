@@ -7,6 +7,7 @@ from . forms import *
 from . models import *
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 # Create your views here.
 def register(request):
@@ -17,7 +18,7 @@ def register(request):
         if request.method == 'POST' and formreg.is_valid():
             new_user = formreg.save(commit=False)
             new_user.username = formreg.cleaned_data['username']
-            new_user.password = formreg.cleaned_data['password1']    
+            new_user.password1 = formreg.cleaned_data['password1']    
             new_user.middlename = formreg.cleaned_data['middlename']
             new_user.group = formreg.cleaned_data['group']
             new_user.role = formreg.cleaned_data['role']
