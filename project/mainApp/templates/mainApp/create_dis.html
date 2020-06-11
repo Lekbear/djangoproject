@@ -1,0 +1,20 @@
+{% extends 'mainApp/mainPage.html' %}
+
+{% block content%}
+    <form class="col-3 mt-3" action="{% url 'create_dis' detail_group=group.id %}" method="POST">
+        {% csrf_token %}
+
+        {% for i in form %}
+            <div class="form-group">
+                {% if i.errors %}
+                    <div class="alert alert-danger">
+                        {{i.errors}}
+                    </div>
+                {% endif %}
+                <label>Название дисциплины</label>
+                {{ i }}
+            </div>
+        {% endfor %}
+        <button class="btn btn-primary" type="submit" name="button_dis"> Добавить дисциплину </button>
+    </form>
+{% endblock %}

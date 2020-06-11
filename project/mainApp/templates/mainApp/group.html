@@ -19,7 +19,7 @@
                     
                     {% else %}
                         <td>{{i.name}}</td>
-                        <td><a href="{% url 'detail_group' table=i.id %}" style="display: flex; justify-content: flex-end;">Перейти к группе</a></td>
+                        <td><a href="{% url 'detail_group' detail_group=i.id %}" style="display: flex; justify-content: flex-end;">Перейти к группе</a></td>
                     {% endif %}
                 {% endif %}
             </tr>

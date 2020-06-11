@@ -1,0 +1,104 @@
+{% extends 'mainApp/mainPage.html' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-4 mt-4">
+            <h3>Дисциплина {{course.course}}</h3>
+            <h3>Группа {{group.name}}</h3>
+            <button data-target="#myModal" role="button" class="btn btn-primary" data-toggle="modal">Добавить колонку</button>
+            <div id="myModal" class="modal fade" role="dialog" tabindex='-1'>
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Добавление колонки</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form action="" method="POST" id="form_one">
+                                {% csrf_token %}
+                                <label for="data_cal">Выберите дату: </label>
+                                <input type="date" class="form-control" id="date" name="form_type_1" placeholder="Дата" required>
+                                <input type="submit" value="Добавить" name = "form_type">
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button data-target="#myModal2" role="button" class="btn btn-primary" data-toggle="modal">Удалить колонку</button>
+            <div id="myModal2" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h4 class="modal-title">Удаление колонки</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form action="" method="POST" id="form_two">
+                            {% csrf_token %}
+                            <label for="data_sel">Выбери дату: </label>
+                            <select name="form_type2">
+                                {% for i in data_select %}
+                                    <option> {{i.data|date:"d-n-Y"}} </option>
+                                {% endfor %}
+                            </select>
+                            <input type="submit" value="Удалить" name = "form_type_2">
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                    </div>
+                  </div>
+                </div>
+              </div>          
+        </div>
+    </div>
+    <div class="all_groups mt-4">
+        <div class="div_row">
+            <div class="div_name">
+                <h6>#</h6>
+            </div>
+            {% for i in attendance %}
+                {% if i.course.course == course.course %}
+                    {% if users.0 == i.User %}
+                        <div class="div_status">
+                            <a href="">Удалить</a>
+                        </div>
+                    {% endif %}    
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="div_row">
+            <div class="div_name">
+                <h6>Студенты</h6>
+            </div>
+            {% for i in attendance %}
+                {% if i.course.course == course.course %}
+                    {% if users.0 == i.User %}
+                        <div class="div_status">
+                            {{i.data|date:"d-n-Y"}}
+                        </div>
+                    {% endif %}    
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% for i in users %}
+            <div class ="div_row">
+                <div class="div_name">
+                    <h6>{{i.last_name}} {{i.first_name}} {{i.middlename}}</h6>
+                </div>
+                {%  for j in attendance %}
+                    {% if i == j.User %}
+                        {% if j.course.course == course.course %}
+                            <div class="div_status">
+                                {{j.status}}
+                            </div>
+                        {% endif %}
+                    {% endif%}
+                {%  endfor %}
+            </div>
+        {% endfor %}
+    </div>
+
+
+{% endblock %}

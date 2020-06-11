@@ -1,0 +1,33 @@
+{% extends 'mainApp/mainPage.html' %}
+
+{% block content%}
+    <div class="row">
+        <div class="col-4 mt-4">
+            <h3>Список дисциплин группы: </h3>
+            <h3>{{group.name}}</h3>
+            <a href="create_dis" class="btn btn-primary " role="button" aria-pressed="true">Добавить дисциплину</a>
+        </div>
+    </div>
+    <table class="table table-hover table-condensed mt-3">
+      <thead>
+          <tr>
+              <th>Дисциплина</th>
+              <td style="display: flex; justify-content: flex-end;"><b>Ссылка</b></td>
+          </tr>
+      </thead>
+      <tbody>
+            {% for i in courses %}
+                {% if i.group == group%}
+                    {% if i.User == request.user %}
+                        <tr>      
+                            <td>{{i.course}}</td>
+                            <td><a href="{% url 'list_courses' detail_group=group.id list_courses=i.id %}" style="display: flex; justify-content: flex-end;">Перейти к группе</a></td>
+                        </tr>
+                    {% else %}
+                    {% endif %}
+                {% else%}
+                {% endif%}
+            {% endfor %}
+      </tbody>
+    </table>
+{% endblock %}
