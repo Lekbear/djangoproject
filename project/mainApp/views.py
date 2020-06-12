@@ -92,6 +92,17 @@ def list_courses(request,detail_group,list_courses):
                     d = Attendance.objects.get(id = i.id) 
                     d.delete() 
             return redirect('list_courses', detail_group=group.id,list_courses=course.id)
+        else:
+            for j in attendance:
+                if j.course.course == course.course and j.User.group == group.name:
+                    st = request.POST.get('in_checkbox='+str(j.id))
+                    ob_st = Attendance.objects.get(id = j.id)
+                    if st == 'on':
+                        ob_st.status = '+'
+                    else:
+                        ob_st.status = '-'
+                    ob_st.save()
+            return redirect('list_courses', detail_group=group.id,list_courses=course.id)
     return render(request,"mainApp/table.html",{'data_select':data_select,'users':users,'attendance':attendance,'group':group,'course':course})
 
 
@@ -107,8 +118,9 @@ def create_dis(request,detail_group):
         new_dis.group = group
         new_dis.course = form.cleaned_data['course']
         for i in users:
-            a = Discipline(User = i, group = group, course = form.cleaned_data['course'])
-            a.save()
+            if i.role == 'Студент':
+                a = Discipline(User = i, group = group, course = form.cleaned_data['course'])
+                a.save()
         new_dis.save()
         return render(request,"mainApp/list_courses.html",{'group':group,'courses':courses})
     return render(request, 'mainApp/create_dis.html',{'form':form,'group':group})

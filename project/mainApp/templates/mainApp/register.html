@@ -15,18 +15,18 @@
         }
     </style>
 </head>
-<body class="jumbotron jumbotron-fluid">
+<body class="">
     <div class="row ">
         <div class="col-4" ></div>
         <div class="col-4" >
-            <form method="POST">
+            <form method="POST" style="background-image: linear-gradient(to right, #4c626d 0%, #1e272b 41%, #4c626d 100%);color: #fff;">
                 {% csrf_token %}
-                <div class="form-control"> 
+                <div class="form-control" style="background-image: linear-gradient(to right, #4c626d 0%, #1e272b 41%, #4c626d 100%);color: #fff;"> 
                     <h3>Регистрация</h3>
                     {% for field in formreg %}
-                        <div class="form-group">  
+                        <div class="form-group" style="background-image: linear-gradient(to right, #4c626d 0%, #1e272b 41%, #4c626d 100%);color: #fff;">  
                             {{ field.errors }}               
-                            <div class="form-control"> 
+                            <div class="form-control" style="background-image: linear-gradient(to right, #4c626d 0%, #1e272b 41%, #4c626d 100%);color: #fff;"> 
                                 {% if field == formreg.role %}
                                 <label>Зарегистрироваться как:</label>
                                 <select name="role" id="id_role" onChange="Selected(this)">
@@ -52,7 +52,7 @@
                 </div>  
                 <div class="mt-4">
                     <div class="d-flex justify-content-center mt-3 login_container">
-                        <input class="btn btn-secondary btn-sm" type="submit" value="Зарегистрироваться">
+                        <input class="btn waves-effect waves-light btn-grd-inverse" type="submit" value="Зарегистрироваться">
                       </div>
 					<div class="d-flex justify-content-center links">
 						<p>Уже есть аккаунт?</p> <a href="{% url 'login' %}" class="ml-2">Войти</a>
