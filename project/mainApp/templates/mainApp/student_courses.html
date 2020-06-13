@@ -1,0 +1,39 @@
+{% extends 'mainApp/mainPage.html' %}
+
+{% block content %}
+<div class="row">
+    <div class=" col-4 mt-3"></div>
+    <div class=" col-4 mt-3">
+        <div class="header-h1 mt-3">
+            <h1>Студент:{{request.user.last_name}} {{request.user.first_name}} {{request.user.middlename}} </h1>
+        </div>
+    </div>                 
+    <div class=" col-4 mt-3"></div>
+</div>
+<table class="table table-hover table-condensed mt-3">
+    <thead>
+        <tr style="background-image: linear-gradient(to right, #4c626d 0%, #1e272b 51%, #4c626d 100%);color: #fff;">
+            <td>Список посещаемых дисциплин</td>
+            <td>Преподаватель</td>
+            <td style="display: flex; justify-content: flex-end;"><b>Ссылка</b></td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for i in dis %}
+            {% if request.user == i.User %}
+                <tr>
+                    <td>{{i.course}}</td>
+                    {% for j in dis %}
+                        {% if i.course == j.course %}
+                            {% if j.User.role == "Преподаватель" %}
+                                <td>{{j.User.last_name}} {{j.User.first_name}} {{j.User.middlename}}</td>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                    <td><a href="{% url 'stud_course' stud_course=i.id %}" style="display: flex; justify-content: flex-end;">Перейти к дисциплине</a></td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

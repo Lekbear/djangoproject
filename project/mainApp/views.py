@@ -26,11 +26,11 @@ def register(request):
             new_user.group = formreg.cleaned_data['group']
             new_user.role = formreg.cleaned_data['role']
             new_user.save()
-            new_user.groups.add(Group.objects.get(name = formreg.cleaned_data['group']))
             if formreg.cleaned_data['role'] == 'Преподаватель':
                 new_user.groups.add(Group.objects.get(name='Преподаватели'))
             else:
                 new_user.groups.add(Group.objects.get(name='Студенты'))
+                new_user.groups.add(Group.objects.get(name = formreg.cleaned_data['group']))
             return redirect('login')
         return render(request, 'mainApp/register.html',{'formreg':formreg})
 
@@ -59,69 +59,99 @@ def mainPage(request):
 
 @login_required(login_url='login')
 def list_group(request):
-    groups_list = Group.objects.all()
-    return render(request,"mainApp/group.html",{'groups_list':groups_list})
+    if request.user.role == 'Преподаватель':
+        groups_list = Group.objects.all()
+        return render(request,"mainApp/group.html",{'groups_list':groups_list})
+    else: 
+        return redirect('main')
 
 @login_required(login_url='login')
 def detail_group(request,detail_group):
-    group = Group.objects.get(id = detail_group)
-    courses = Discipline.objects.all()
-    return render(request,"mainApp/list_courses.html",{'group':group,'courses':courses})
-    #return render(request, "mainApp/detail_group.html", {'group':group,'users':users,'attendance':attendance,'courses':courses})
+    if request.user.role == 'Преподаватель':
+        group = Group.objects.get(id = detail_group)
+        courses = Discipline.objects.all()
+        return render(request,"mainApp/list_courses.html",{'group':group,'courses':courses})
+        #return render(request, "mainApp/detail_group.html", {'group':group,'users':users,'attendance':attendance,'courses':courses})
+    else: 
+        return redirect('main')
 
 @login_required(login_url='login')
 def list_courses(request,detail_group,list_courses):
-    group = Group.objects.get(id = detail_group)
-    users = group.user_set.all()
-    attendance = Attendance.objects.order_by('data')
-    data_select = Attendance.objects.filter(User = users[0]).order_by('data')
-    course = Discipline.objects.get(id = list_courses)
-    if request.POST:
-        if request.POST.get("form_type") == 'Добавить':
-            date_cal = request.POST.get('form_type_1')
-            for i in users:
-                a = Attendance(User = i,course = course, status = '-', data = date_cal)
-                a.save()      
-            return redirect('list_courses', detail_group=group.id,list_courses=course.id)
-                
-        elif request.POST.get("form_type_2") == 'Удалить':
-            date_sel = request.POST.get('form_type2')
-            att = Attendance.objects.all()
-            for i in att:
-                if dateformat.format(i.data, settings.DATE_FORMAT) == date_sel:
-                    d = Attendance.objects.get(id = i.id) 
-                    d.delete() 
-            return redirect('list_courses', detail_group=group.id,list_courses=course.id)
-        else:
-            for j in attendance:
-                if j.course.course == course.course and j.User.group == group.name:
-                    st = request.POST.get('in_checkbox='+str(j.id))
-                    ob_st = Attendance.objects.get(id = j.id)
-                    if st == 'on':
-                        ob_st.status = '+'
-                    else:
-                        ob_st.status = '-'
-                    ob_st.save()
-            return redirect('list_courses', detail_group=group.id,list_courses=course.id)
-    return render(request,"mainApp/table.html",{'data_select':data_select,'users':users,'attendance':attendance,'group':group,'course':course})
-
+    if request.user.role == 'Преподаватель':
+        group = Group.objects.get(id = detail_group)
+        users = group.user_set.all()
+        attendance = Attendance.objects.order_by('data')
+        data_select = Attendance.objects.filter(User = users[0]).order_by('data')
+        course = Discipline.objects.get(id = list_courses)
+        if request.POST:
+            if request.POST.get("form_type") == 'Добавить':
+                date_cal = request.POST.get('form_type_1')
+                for i in users:
+                    a = Attendance(User = i,course = course, status = '-', data = date_cal)
+                    a.save()      
+                return redirect('list_courses', detail_group=group.id,list_courses=course.id)
+                    
+            elif request.POST.get("form_type_2") == 'Удалить':
+                date_sel = request.POST.get('form_type2')
+                att = Attendance.objects.all()
+                for i in att:
+                    if dateformat.format(i.data, settings.DATE_FORMAT) == date_sel:
+                        d = Attendance.objects.get(id = i.id) 
+                        d.delete() 
+                return redirect('list_courses', detail_group=group.id,list_courses=course.id)
+            else:
+                for j in attendance:
+                    if j.course.course == course.course and j.User.group == group.name:
+                        st = request.POST.get('in_checkbox='+str(j.id))
+                        ob_st = Attendance.objects.get(id = j.id)
+                        if st == 'on':
+                            ob_st.status = '+'
+                        else:
+                            ob_st.status = '-'
+                        ob_st.save()
+                return redirect('list_courses', detail_group=group.id,list_courses=course.id)
+        return render(request,"mainApp/table.html",{'data_select':data_select,'users':users,'attendance':attendance,'group':group,'course':course})
+    else: 
+        return redirect('main')
 
 @login_required(login_url='login')
 def create_dis(request,detail_group):
-    group = Group.objects.get(id = detail_group)
-    courses = Discipline.objects.all()
-    form = create_dis_form(request.POST or None)
-    if request.method == 'POST' and form.is_valid():
+    if request.user.role == 'Преподаватель':
+        group = Group.objects.get(id = detail_group)
+        courses = Discipline.objects.all()
+        form = create_dis_form(request.POST or None)
+        if request.method == 'POST' and form.is_valid():
+            users = group.user_set.all()
+            new_dis = form.save(commit=False)
+            new_dis.User = request.user
+            new_dis.group = group
+            new_dis.course = form.cleaned_data['course']
+            for i in users:
+                if i.role == 'Студент':
+                    a = Discipline(User = i, group = group, course = form.cleaned_data['course'])
+                    a.save()
+            new_dis.save()
+            return render(request,"mainApp/list_courses.html",{'group':group,'courses':courses})
+        return render(request, 'mainApp/create_dis.html',{'form':form,'group':group})
+    else: 
+        return redirect('main')
+
+@login_required(login_url='login')
+def student_courses(request):
+    if request.user.role == 'Студент':
+        dis = Discipline.objects.all()
+        return render(request,'mainApp/student_courses.html',{'dis':dis})
+    else: 
+        return redirect('main')
+
+@login_required(login_url='login')
+def stud_course(request,stud_course):
+    if request.user.role == 'Студент':
+        dis = Discipline.objects.get(id = stud_course)
+        courses = Discipline.objects.all() 
+        group = Group.objects.get(name = request.user.group)
         users = group.user_set.all()
-        new_dis = form.save(commit=False)
-        new_dis.User = request.user
-        new_dis.group = group
-        new_dis.course = form.cleaned_data['course']
-        for i in users:
-            if i.role == 'Студент':
-                a = Discipline(User = i, group = group, course = form.cleaned_data['course'])
-                a.save()
-        new_dis.save()
-        return render(request,"mainApp/list_courses.html",{'group':group,'courses':courses})
-    return render(request, 'mainApp/create_dis.html',{'form':form,'group':group})
-    
+        attendance = Attendance.objects.order_by('data')
+        return render(request,'mainApp/stud_course.html',{'courses':courses,'users':users,'attendance':attendance,'dis':dis})
+    else: 
+        return redirect('main')

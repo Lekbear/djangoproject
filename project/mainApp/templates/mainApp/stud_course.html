@@ -1,0 +1,71 @@
+{% extends 'mainApp/mainPage.html' %}
+
+{% block content%}
+<div class="row">
+    <div class=" col-4 mt-3"></div>
+    <div class=" col-4 mt-3">
+        <div class="header-h1 mt-2">
+            <h1>Дисциплина<br> {{dis.course}}<br>
+                Группа {{request.user.group}}<br>
+                {% for i in courses %}
+                    {% if i.course == dis.course %}
+                        {% if i.User.role == "Преподаватель" %}
+                            Преподаватель <br>{{i.User.last_name}} {{i.User.first_name}} {{i.User.middlename}}
+                        {% endif %}
+                    {% endif %}
+                {% endfor%}
+            </h1>
+        </div>
+
+    </div>                 
+    <div class=" col-4 mt-3"></div>
+</div>
+<div class="all_groups mt-2">  
+    <div class="div_row">
+        <div class="div_name">
+            <h6>Студенты</h6>
+        </div>
+        {% for i in attendance %}
+            {% if i.course.course == dis.course %}
+                {% if users.0 == i.User %}
+                    <div class="div_status">
+                        {{i.data|date:"d-n-Y"}}
+                    </div>
+                {% endif %}    
+            {% endif %}
+        {% endfor %}
+    </div>
+    {% for i in users %}
+        <div class ="div_row">
+            <div class="div_name">
+                <h6>{{i.last_name}} {{i.first_name}} {{i.middlename}}</h6>
+            </div>
+            {%  for j in attendance %}
+                {% if i == j.User %}
+                    {% if j.course.course == dis.course %}
+                        <div class="div_status">
+                            {% if j.status == '+' %}
+                                <input class="in_check" name = "in_checkbox={{j.id}}" type="checkbox"  onclick="p(event)" checked>
+                            {% else %}
+                                <input class="in_check" name = "in_checkbox={{j.id}}" type="checkbox"  onclick="p(event)">
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endif%}
+            {%  endfor %}
+        </div>
+    {% endfor %}
+</div>
+
+<script>
+    var check_test = true
+    function p(e) {
+        if (check_test){
+            e.preventDefault();
+            return false;
+        }    
+    };
+</script>
+
+
+{% endblock %}
