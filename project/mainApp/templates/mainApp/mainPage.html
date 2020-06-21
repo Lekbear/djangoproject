@@ -195,7 +195,6 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav">
-            <a class="nav-item nav-link active" href="{% url 'main' %}" style="color: #fff";>Home <span class="sr-only">(current)</span></a>
             {% if request.user.role == "Преподаватель" %}
                 <a class="nav-item nav-link" href="{% url 'groups' %}" style="color: #fff;">Для преподавателя</a>
             {% else %} 
@@ -209,8 +208,7 @@
             <button class="btn btn-sm align-middle btn-outline-secondary" type="button"><a href="{% url 'logout' %}">Выйти</a></button>
         </form>
     </nav>
-
-
+    
         {% block content%}
 
         {% endblock%}
